@@ -1,49 +1,58 @@
 # DayCue
 
-A native macOS menu bar app built with Swift, SwiftUI, and AppKit.
+Plan your day with weekly time blocks and gentle reminders from the macOS menu bar.
 
-The current scaffold provides a menu bar entry, a basic window, a launch-at-login switch, and local app packaging. Schedule management, time-block switching, Toasts, and schedule persistence are not implemented.
+The menu bar icon follows your current time block's color. Hover to see its name and time, or open the menu to see what's next. DayCue uses your Mac's local time zone.
 
-## Requirements
+## Install
 
-- macOS 14 or later.
-- Swift 6 or later, available through a compatible Command Line Tools installation. Full Xcode is not required.
+Requires macOS 14 or later. Open the DMG, drag **DayCue** to **Applications**, then launch it.
 
-## Development
+Allow notifications when prompted to receive time-block reminders. Enable **Launch at Login** from the menu bar if you want DayCue to start when you sign in. If approval is required, choose **Open Login Settings…**.
+
+## Plan Your Day
+
+1. Choose **Edit Schedule…** from the menu bar.
+2. Select a date. Use the week arrows to browse or **Today** to return to today.
+3. Choose **Add Time Block**, or click an existing block to edit it.
+4. Set its name, time range, repeat days, and color, then choose **Save**.
+
+Click the time range to open the picker. Scroll the hours and minutes, or click a center number to type. The start must be earlier than the end; only the end can be `24:00`. Blocks cannot overlap on the same weekday or cross midnight.
+
+Changes apply from today across the block's repeat days, even when editing from a future date. Past dates keep their previous schedule and are read-only. Time outside your blocks appears as **Free Time**.
+
+Closing Schedule keeps DayCue running in the menu bar. Use **Quit** to exit. See [Interaction](docs/interaction.md) for keyboard shortcuts and unsaved-change behavior.
+
+## Reminders
+
+DayCue sends silent macOS notifications when a time block starts or ends. Use **Notification Settings…** in the menu bar to adjust permissions and banner style. Focus and other system settings can silence reminders.
+
+Missed reminders are not replayed after startup or wake. Editing your schedule does not trigger a reminder.
+
+## Your Schedule
+
+Your schedule stays on your Mac. To back it up, copy:
+
+```text
+~/Library/Application Support/io.github.zxhio.daycue/schedule.json
+```
+
+If DayCue cannot load your schedule, it keeps the original file and shows an error. Failed saves leave your draft available to retry.
+
+## Build and Package
+
+Building requires Swift 6 or later through a compatible Command Line Tools installation. Full Xcode is not required.
 
 ```sh
 swift build
-swift run DayCue
-```
-
-Use **Open DayCue…** in the menu bar to open the window. Closing the window keeps the app running; **Quit DayCue** exits it.
-
-## Launch at Login
-
-Use **Launch at Login** in the menu bar to enable or disable startup after user login. It remains off until enabled by the user. The switch reads the macOS login-item status each time the menu opens, including changes made in System Settings.
-
-A dash indicates that macOS approval is required; use **Open Login Settings…** to approve it. Clicking the switch again removes the pending registration.
-
-Configure this from the packaged app in its intended installation location. The switch is disabled for `swift run` and apps running from read-only volumes such as the DMG. No helper process or third-party dependency is required.
-
-## Packaging
-
-```sh
 ./scripts/build-app.sh
 open dist/DayCue.app
+```
+
+To create a DMG:
+
+```sh
 ./scripts/package.sh
 ```
 
-The scripts create a release build, an ad hoc signed `dist/DayCue.app`, and a compressed `dist/DayCue-<version>-<architecture>.dmg`. Builds target the current Mac's architecture. Version and bundle metadata are defined in `packaging/Info.plist`.
-
-To install, open the DMG and drag **DayCue** to **Applications**. These are local development packages, without Developer ID signing or notarization.
-
-## Source Layout
-
-- `Sources/DayCue/App`: application entry point and lifecycle.
-- `Sources/DayCue/MenuBar`: status item and menu actions.
-- `Sources/DayCue/Window`: AppKit window management and SwiftUI content.
-- `packaging`: app bundle metadata.
-- `scripts`: app and DMG packaging.
-
-There are no third-party dependencies or test cases. Build outputs are ignored by Git.
+Outputs are written to `dist/`. Use the packaged app for notifications and Launch at Login. Local builds are not notarized.

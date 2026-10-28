@@ -1,7 +1,7 @@
 # Project
 
 - Build a macOS-only menu bar time-block app within the agreed MVP scope.
-- Use Swift, SwiftUI for Schedule, and AppKit for the menu bar and Toast.
+- Use Swift, SwiftUI for Schedule, and AppKit for the menu bar, and UserNotifications for reminders.
 - Build with SwiftPM and package `.app` bundles with a script; require only Command Line Tools and the macOS SDK.
 - Store schedules as local JSON. Prefer system frameworks.
 - For keyboard, window-close, or quit changes, read local `docs/interaction.md` when available.
