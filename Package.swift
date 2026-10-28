@@ -9,6 +9,6 @@ let package = Package(
         .executable(name: "DayCue", targets: ["DayCue"])
     ],
     targets: [
-        .executableTarget(name: "DayCue")
+        .executableTarget(name: "DayCue", resources: [.copy("Resources/DayCue.svg"), .copy("Resources/DayCueMenuBar.svg")])
     ]
 )
